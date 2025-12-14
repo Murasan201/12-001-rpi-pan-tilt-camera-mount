@@ -1,6 +1,9 @@
 # 原稿ファイル（機密情報）
 chapter12_manuscript.md
 
+# MCP設定ファイル（ローカルパス情報含む）
+.mcp.json
+
 # Python
 __pycache__/
 *.py[cod]
