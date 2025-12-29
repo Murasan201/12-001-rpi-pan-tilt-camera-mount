@@ -66,11 +66,32 @@
 2. **読みやすいこと** - 初心者が理解できるコードにする
 3. **シンプルであること** - 余計な機能や複雑さを排除する
 
-### 修正禁止ファイル
+### 修正禁止ファイル・ディレクトリ
 
 - **`_full` が付いているファイルは絶対に修正しないこと**
 - これらのファイルは実機動作確認済みでFixされている
 - 例: `servo_control_full.py`, `servo_initial_position_setup_full.py`, `setup_servo_center_full.py`
+
+- **`reference/` ディレクトリ内のファイルは一切変更しないこと**
+- 参照用データが格納されている
+- 読み取り専用として扱う
+
+### servo_control.py の互換性要件
+
+**重要**: `servo_control.py` は外部プロジェクトからライブラリとして使用されている。
+
+- **依存プロジェクト**: `reference/12-002-pet-monitoring-yolov8`
+- **仕様書**: `docs/servo_control_specification.md`
+
+MVP化する際は、以下の**必須API**のシグネチャを変更してはならない：
+- `initialize_servo_kit()`
+- `set_pan_angle(kit, angle, smooth=True)`
+- `set_tilt_angle(kit, angle, smooth=True)`
+- `set_pan_tilt(kit, pan_angle, tilt_angle, smooth=True)`
+- `set_center_position(kit, smooth=True)`
+- `release_servos(kit)`
+
+内部実装の簡略化やテスト関数の削除は可。
 
 ## Git操作とセキュリティ
 

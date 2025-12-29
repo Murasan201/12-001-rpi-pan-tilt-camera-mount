@@ -46,3 +46,6 @@ Thumbs.db
 *.png
 *.mp4
 *.avi
+
+# 参照用プロジェクト（別リポジトリ）
+reference/
