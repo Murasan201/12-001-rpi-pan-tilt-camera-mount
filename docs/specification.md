@@ -44,7 +44,7 @@
 - **チルト（上下）用サーボ**: サーボHATの1番端子
 - **通信方式**: I2C通信
 - **PWM周波数**: 50Hz
-- **パルス幅範囲**: 500μs ～ 2400μs
+- **パルス幅範囲**: 750μs ～ 2250μs
 
 ---
 
@@ -61,17 +61,13 @@
 python3-pip
 
 # Adafruit CircuitPythonライブラリ
-adafruit-circuitpython-pca9685   # PCA9685 PWMコントローラ制御
-adafruit-circuitpython-motor     # サーボモーター角度制御
+adafruit-circuitpython-servokit  # サーボモーター制御（ServoKit）
 ```
 
 ### 3.3 依存ライブラリ
 ```python
-import board          # Raspberry PiのGPIOピン定義
-import busio          # I2C通信
-import time           # 時間制御
-from adafruit_pca9685 import PCA9685
-from adafruit_motor import servo
+import time                        # 時間制御
+from adafruit_servokit import ServoKit  # サーボモーター制御
 ```
 
 ---
@@ -92,8 +88,8 @@ from adafruit_motor import servo
 
 ### 4.3 制御パラメータ
 - **PWM周波数**: 50Hz
-- **最小パルス幅**: 500μs
-- **最大パルス幅**: 2400μs
+- **最小パルス幅**: 750μs
+- **最大パルス幅**: 2250μs
 - **角度分解能**: 1度単位
 
 ---
@@ -107,35 +103,12 @@ from adafruit_motor import servo
 #### 5.1.1 目的
 - サーボモーターを中央位置（90度）に設定
 - サーボホーン取り付け前の初期位置調整
-- 動作テストの実施
 
 #### 5.1.2 機能
-1. **両サーボを中央位置（90度）に移動**
-   - パンサーボとチルトサーボを90度に設定
-   - サーボホーン取り付けの基準位置
+- 両サーボ（パン・チルト）を90度に設定
+- 位置を保持し続ける（Ctrl+Cで終了）
 
-2. **パンサーボの動作テスト**
-   - 45度（左）→ 90度（中央）→ 135度（右）→ 90度（中央）
-   - 動作時間: 各位置で1秒停止
-
-3. **チルトサーボの動作テスト**
-   - 45度（下）→ 90度（中央）→ 120度（上）→ 90度（中央）
-   - 動作時間: 各位置で1秒停止
-
-4. **位置保持モード（組付け作業用）**
-   - 両サーボを90度で保持
-   - Ctrl+Cで終了可能
-   - 組付け作業中の位置維持
-
-5. **プログラム終了**
-   - リソースの解放（pca.deinit()）
-
-#### 5.1.3 ユーザーインターフェース
-- メニュー形式（1-5の選択）
-- 各操作の進捗表示
-- エラーハンドリング（KeyboardInterrupt対応）
-
-#### 5.1.4 実行コマンド
+#### 5.1.3 実行コマンド
 ```bash
 python3 servo_initial_position_setup.py
 ```
@@ -199,15 +172,12 @@ Raspberry Pi
 ```
 
 ### 6.2 初期化シーケンス
-1. I2C接続の初期化（SCL, SDAピン）
-2. PCA9685の初期化
-3. PWM周波数の設定（50Hz）
-4. サーボモーターオブジェクトの生成
-   - min_pulse=500, max_pulse=2400
+1. ServoKitの初期化（16チャンネル）
+2. パルス幅範囲の設定（750～2250μs）
+3. サーボ角度の設定
 
 ### 6.3 エラーハンドリング
 - **KeyboardInterrupt**: Ctrl+Cによる中断処理
-- **finally句**: リソースの確実な解放（pca.deinit()）
 
 ---
 
@@ -225,18 +195,14 @@ sudo reboot
 sudo apt update
 sudo apt install python3-pip
 
-# Adafruit CircuitPythonライブラリのインストール
-sudo pip3 install adafruit-circuitpython-pca9685
-sudo pip3 install adafruit-circuitpython-motor
+# Adafruit ServoKitライブラリのインストール
+sudo pip3 install adafruit-circuitpython-servokit
 ```
 
 ### 7.3 インストール確認
 ```bash
 python3
->>> import board
->>> import busio
->>> from adafruit_pca9685 import PCA9685
->>> from adafruit_motor import servo
+>>> from adafruit_servokit import ServoKit
 >>> exit()
 ```
 
@@ -251,11 +217,10 @@ python3
 6. カメラをRaspberry Piのカメラコネクタに接続
 
 ### 7.5 初期位置設定
-1. `servo_initial_position_setup.py` を実行
-2. メニューから「1」を選択して中央位置（90度）に移動
-3. サーボホーンを取り付け
-4. 動作テスト（メニュー2, 3）を実行
-5. 問題なければプログラムを終了
+1. `servo_initial_position_setup.py` を実行（サーボが90度に移動）
+2. サーボホーンを取り付け
+3. Ctrl+Cでプログラムを終了
+4. `servo_control.py` を実行して動作テスト
 
 ---
 
@@ -286,7 +251,7 @@ python3
 | 制御IC | PCA9685 |
 | 通信方式 | I2C |
 | PWM周波数 | 50Hz |
-| パルス幅範囲 | 500μs ～ 2400μs |
+| パルス幅範囲 | 750μs ～ 2250μs |
 | 角度範囲 | 0° ～ 180° |
 | 角度分解能 | 1° |
 | サーボ接続数 | 2個（パン、チルト） |

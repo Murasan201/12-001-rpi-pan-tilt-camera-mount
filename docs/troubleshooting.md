@@ -142,19 +142,19 @@ sudo pip3 install adafruit-circuitpython-motor --break-system-packages
    - チャンネル1: チルトサーボ（上下）
    - **3個以上は接続しない**
 
-2. **動作確認スクリプトを実行**
+2. **初期位置設定スクリプトを実行**
    ```bash
    cd /home/pi/work/project/kodansya/12-001-rpi-pan-tilt-camera-mount
    python3 servo_initial_position_setup.py
    ```
+   - 両サーボが90度に移動するか確認
+   - Ctrl+Cで終了
 
-3. **メニューから「1」を選択**
-   - 両サーボを90度に設定
-   - サーボが動くか確認
-
-4. **問題なければ「2」「3」で動作テスト**
-   - パンサーボの動作確認
-   - チルトサーボの動作確認
+3. **動作テストを実行**
+   ```bash
+   python3 servo_control.py
+   ```
+   - パン・チルトの動作確認
 
 **電源ランプが点灯しない場合**:
 
